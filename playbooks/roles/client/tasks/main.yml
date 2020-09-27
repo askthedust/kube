@@ -1,0 +1,21 @@
+---
+- name: Dowload cfssl cfssljson
+  get_url:
+    url: "{{ cfssl_url }}{{ item }}"
+    dest: "{{ local_executable_path }}{{ item }}"
+    mode: '0755'
+  become: true
+  with_items:
+    - cfssl
+    - cfssljson
+  delegate_to: 127.0.0.1
+
+- name: Dowload kubectl
+  get_url:
+    url: "{{ k8s_url }}{{ item }}"
+    dest: "{{ local_executable_path }}{{ item }}"
+    mode: '0755'
+  become: true
+  with_items:
+    - kubectl
+  delegate_to: 127.0.0.1

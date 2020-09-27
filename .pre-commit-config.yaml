@@ -1,0 +1,4 @@
+repos:
+- repo: https://github.com/askthedust/kube
+  hooks:
+    - id: check-yaml

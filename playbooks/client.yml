@@ -1,0 +1,12 @@
+---
+#- hosts: 127.0.0.1
+#  connection: local
+
+- hosts: all
+  gather_facts: true
+  become: false
+  become_method: sudo
+
+  roles:
+    #- {role: client, tags: ["client"]}
+    - {role: pki, tags: ["pki"]}

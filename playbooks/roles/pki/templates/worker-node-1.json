@@ -1,0 +1,16 @@
+{
+  "CN": "system:node:node-1",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "NL",
+      "L": "Amsterdam",
+      "O": "system:nodes",
+      "OU": "Kubernetes",
+      "ST": "Netherlands"
+    }
+  ]
+}
