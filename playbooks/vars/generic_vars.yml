@@ -1,0 +1,17 @@
+---
+certificate_path: "k8s-certs"
+workers:
+  - name: node-1
+    ip: 192.168.50.11
+  - name: node-2
+    ip: 192.168.50.12
+
+load_balancer:
+  - name: load-balancer
+    ip: 192.168.50.3
+
+controllers:
+  - name: master-1
+    ip: 192.168.50.1
+  - name: master-2
+    ip: 192.168.50.2
