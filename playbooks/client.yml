@@ -10,6 +10,9 @@
     - "./vars/generic_vars.yml"
 
   roles:
-    #- {role: client, tags: ["client"]}
-    - {role: pki, tags: ["pki"]}
-    - {role: kube-config, tags: ["config"]}
+#    - {role: resolv-hosts, tags: ["hosts"]}
+#    - {role: client, tags: ["client"]}
+#    - {role: pki, tags: ["pki"]}
+#    - {role: kube-config, tags: ["config"]}
+#    - {role: data-encryption, tags: ["test"]}
+

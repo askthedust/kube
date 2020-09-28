@@ -1,5 +1,6 @@
 ---
 certificate_path: "k8s-certs"
+merged_hosts: []
 workers:
   - name: node-1
     ip: 192.168.50.11

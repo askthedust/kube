@@ -1,0 +1,82 @@
+IMAGE_NAME = "ubuntu/xenial64"
+N = 2
+
+Vagrant.configure("2") do |config|
+    config.ssh.insert_key = false
+
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 2048
+        v.cpus = 2
+    end
+      
+    config.vm.define "master-1", primary: true, autostart: false do |master|
+        master.vm.box = IMAGE_NAME
+        master.vm.network "private_network", ip: "192.168.50.10"
+        master.vm.hostname = "master-1"
+        master.vm.provision "ansible" do |ansible|
+            ansible.playbook = "kubernetes-setup/master-playbook.yml"
+            ansible.raw_arguments = ['-vv']
+            ansible.extra_vars = {
+                node_ip: "192.168.50.10",
+                ansible_python_interpreter:"/usr/bin/python3",
+            }
+        end
+    end
+
+    config.vm.define "master-2", primary: true, autostart: false do |master|
+        master.vm.box = IMAGE_NAME
+        master.vm.network "private_network", ip: "192.168.50.11"
+        master.vm.hostname = "master-2"
+        master.vm.provision "ansible" do |ansible|
+            ansible.playbook = "kubernetes-setup/master-playbook.yml"
+            ansible.raw_arguments = ['-vv']
+            ansible.extra_vars = {
+                node_ip: "192.168.50.11",
+                ansible_python_interpreter:"/usr/bin/python3",
+            }
+        end
+    end
+
+    config.vm.define "loadbalancer", primary: true, autostart: false do |loadbalancer|
+        loadbalancer.vm.box = IMAGE_NAME
+        loadbalancer.vm.network "private_network", ip: "192.168.50.12"
+        loadbalancer.vm.hostname = "loadbalancer"
+        loadbalancer.vm.provision "ansible" do |ansible|
+            ansible.playbook = "kubernetes-setup/master-playbook.yml"
+            ansible.raw_arguments = ['-vv']
+            ansible.extra_vars = {
+                node_ip: "192.168.50.12",
+                ansible_python_interpreter:"/usr/bin/python3",
+            }
+        end
+    end
+
+    config.vm.define "node-1", autostart: false do |node|
+        node.vm.box = IMAGE_NAME
+        node.vm.network "private_network", ip: "192.168.50.20"
+        node.vm.hostname = "node-1"
+        node.vm.provision "ansible" do |ansible|
+            ansible.limit = "all"
+            ansible.playbook = "kubernetes-setup/node-playbook.yml"
+            ansible.raw_arguments = ['-vv']
+            ansible.extra_vars = {
+                node_ip: "192.168.50.20",
+                ansible_python_interpreter:"/usr/bin/python3",
+            }
+        end
+    end
+    config.vm.define "node-2", autostart: false do |node|
+        node.vm.box = IMAGE_NAME
+        node.vm.network "private_network", ip: "192.168.50.21"
+        node.vm.hostname = "node-2"
+        node.vm.provision "ansible" do |ansible|
+            ansible.limit = "all"
+            ansible.playbook = "kubernetes-setup/node-playbook.yml"
+            ansible.raw_arguments = ['-vv']
+            ansible.extra_vars = {
+                node_ip: "192.168.50.21",
+                ansible_python_interpreter:"/usr/bin/python3",
+            }
+        end
+    end
+end

@@ -1,0 +1,4 @@
+---
+- name: Environment debug
+  debug:
+    msg: "{{ ansible_facts['user_dir'] }}"

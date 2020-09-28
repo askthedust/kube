@@ -1,0 +1,19 @@
+---
+- name: Create merged list
+  set_fact:
+    merged_hosts: "{{ merged_hosts + [item] }}"
+  with_items:
+    - "{{ workers }}"
+    - "{{ controllers }}"
+    - "{{ load_balancer }}"
+
+- name: Add hosts into hosts file
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ item.ip }} {{ item.name }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
+  loop:
+    "{{ merged_hosts }}"
+  delegate_to: 127.0.0.1
+  become: true
