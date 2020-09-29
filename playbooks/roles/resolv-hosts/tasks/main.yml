@@ -7,7 +7,7 @@
     - "{{ controllers }}"
     - "{{ load_balancer }}"
 
-- name: Add hosts into hosts file
+- name: Add hosts into system hosts file
   blockinfile:
     path: /etc/hosts
     block: |
@@ -15,5 +15,18 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
   loop:
     "{{ merged_hosts }}"
-  delegate_to: 127.0.0.1
   become: true
+  when: mao is defined
+
+- name: Vagrant ssh key
+  shell: vagrant ssh-config node-1 | grep IdentityFile | awk '{print $2}'
+  args:
+    chdir: ../vagrant
+  register: vagrant_ssh_key
+
+- name: Add hosts to ansible host file
+  template:
+    src: hosts.j2
+    dest: "{{ inventory_dir }}/vagrant_hosts"
+  loop:
+    "{{ merged_hosts }}"

@@ -1,18 +1,20 @@
 ---
 certificate_path: "k8s-certs"
+remote_user: vagrant
+vagrant_dir:
 merged_hosts: []
 workers:
   - name: node-1
-    ip: 192.168.50.11
+    ip: 192.168.50.21
   - name: node-2
-    ip: 192.168.50.12
+    ip: 192.168.50.22
 
 load_balancer:
   - name: load-balancer
-    ip: 192.168.50.3
+    ip: 192.168.50.30
 
 controllers:
   - name: master-1
-    ip: 192.168.50.1
+    ip: 192.168.50.11
   - name: master-2
-    ip: 192.168.50.2
+    ip: 192.168.50.12

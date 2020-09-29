@@ -3,3 +3,6 @@
 .DS_Store
 venv*
 *.retry
+*.log
+.vagrant*
+vagrant_hosts

@@ -1,0 +1,19 @@
+[all]
+{% for host in merged_hosts %}
+{{ host.name }} ansible_host={{ host.ip }} ansible_user={{ remote_user }} ansible_ssh_private_key_file={{ vagrant_ssh_key.stdout }}
+{% endfor %}
+
+[nodes]
+{% for host in workers %}
+{{ host.name }} ansible_host={{ host.ip }} ansible_user={{ remote_user }} ansible_ssh_private_key_file={{ vagrant_ssh_key.stdout }}
+{% endfor %}
+
+[masters]
+{% for host in controllers %}
+{{ host.name }} ansible_host={{ host.ip }} ansible_user={{ remote_user }} ansible_ssh_private_key_file={{ vagrant_ssh_key.stdout }}
+{% endfor %}
+
+[load-balancer]
+{% for host in load_balancer %}
+{{ host.name }} ansible_host={{ host.ip }} ansible_user={{ remote_user }} ansible_ssh_private_key_file={{ vagrant_ssh_key.stdout }}
+{% endfor %}
