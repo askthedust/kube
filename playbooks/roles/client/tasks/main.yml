@@ -8,7 +8,6 @@
   with_items:
     - cfssl
     - cfssljson
-  delegate_to: 127.0.0.1
 
 - name: Dowload kubectl
   get_url:
@@ -18,4 +17,3 @@
   become: true
   with_items:
     - kubectl
-  delegate_to: 127.0.0.1

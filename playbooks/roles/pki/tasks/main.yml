@@ -1,47 +1,35 @@
 ---
-- name: Set usr home
-  shell: "echo $HOME"
-  register: user_home
-  become: false
-  delegate_to: 127.0.0.1
-
 - name: Create the directory where to store the certificates
   file:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}"
+    path: "{{ user_home }}/{{ certificate_path }}"
     state: directory
     mode: '0755'
-  delegate_to: 127.0.0.1
 
 - name: Check if CA already exists
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/ca.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/ca.pem"
   register: ca_file
-  delegate_to: 127.0.0.1
 
 - name: Generate CA
-  shell: "cfssl gencert -initca {{ role_path }}/templates/ca-csr.json | cfssljson -bare {{ user_home.stdout }}/{{ certificate_path }}/ca"
-  delegate_to: 127.0.0.1
+  shell: "cfssl gencert -initca {{ role_path }}/templates/ca-csr.json | cfssljson -bare {{ user_home }}/{{ certificate_path }}/ca"
   when: not ca_file.stat.exists
 
 - name: Check if Admin keys already exists
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/admin.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/admin.pem"
   register: admin_file
-  delegate_to: 127.0.0.1
 
 - name: Generate admin certificates
-  shell: "cfssl gencert -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+  shell: "cfssl gencert -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json -profile=kubernetes \
-    {{ role_path }}/templates/admin-csr.json | cfssljson -bare {{ user_home.stdout }}/{{ certificate_path }}/admin"
-  delegate_to: 127.0.0.1
+    {{ role_path }}/templates/admin-csr.json | cfssljson -bare {{ user_home }}/{{ certificate_path }}/admin"
   when: not admin_file.stat.exists
 
 - name: Check if workers jsons already exists
   stat:
     path: "{{ role_path }}/templates/worker-{{ workers[0]['name'] }}.json"
   register: workers_file
-  delegate_to: 127.0.0.1
 
 - name: Create the configuration file
   template:
@@ -50,33 +38,29 @@
     mode: '0644'
   loop:
     "{{ workers }}"
-  delegate_to: 127.0.0.1
   when: not workers_file.stat.exists
 
 - name: Check if workers keys already exists
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/{{ workers[0]['name'] }}.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/{{ workers[0]['name'] }}.pem"
   register: workers_pem
-  delegate_to: 127.0.0.1
 
 - name: Generate worker certificates
   shell: "cfssl gencert \
-    -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+    -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json \
     -hostname={{ item.ip }},{{item.name}} \
     -profile=kubernetes \
     {{ role_path }}/templates/worker-{{ item.name }}.json | cfssljson -bare \
-    {{ user_home.stdout }}/{{ certificate_path }}/{{item.name}}"
+    {{ user_home }}/{{ certificate_path }}/{{item.name}}"
   loop:
     "{{ workers }}"
-  delegate_to: 127.0.0.1
   when: not workers_pem.stat.exists
 
 - name: Check node certificates
-  shell: openssl x509 -in {{ user_home.stdout }}/{{ certificate_path }}/node-2.pem -text -noout
+  shell: openssl x509 -in {{ user_home }}/{{ certificate_path }}/node-2.pem -text -noout
   register: cert_out
-  delegate_to: 127.0.0.1
 
 - name: Print check for certificate
   debug:
@@ -85,86 +69,76 @@
 
 - name: Check Controlelr manager certificate
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/kube-controller-manager.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/kube-controller-manager.pem"
   register: cm_pem
-  delegate_to: 127.0.0.1
 
 - name: Generate controller manager certificates
   shell: "cfssl gencert \
-    -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+    -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json \
     -profile=kubernetes \
     {{ role_path }}/templates/kube-controller-manager-csr.json | cfssljson -bare \
-    {{ user_home.stdout }}/{{ certificate_path }}/kube-controller-manager"
-  delegate_to: 127.0.0.1
+    {{ user_home }}/{{ certificate_path }}/kube-controller-manager"
   when: not cm_pem.stat.exists
 
 - name: Check kube-proxy certificate
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/kube-proxy.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/kube-proxy.pem"
   register: kp_pem
-  delegate_to: 127.0.0.1
 
 - name: Generate kube-proxy certificates
   shell: "cfssl gencert \
-    -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+    -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json \
     -profile=kubernetes \
     {{ role_path }}/templates/kube-proxy-csr.json | cfssljson -bare \
-    {{ user_home.stdout }}/{{ certificate_path }}/kube-proxy"
-  delegate_to: 127.0.0.1
+    {{ user_home }}/{{ certificate_path }}/kube-proxy"
   when: not kp_pem.stat.exists
 
 - name: Check kube-scheduler certificate
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/kube-scheduler.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/kube-scheduler.pem"
   register: ks_pem
-  delegate_to: 127.0.0.1
 
 - name: Generate kube-scheduler certificates
   shell: "cfssl gencert \
-    -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+    -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json \
     -profile=kubernetes \
     {{ role_path }}/templates/kube-scheduler-csr.json | cfssljson -bare \
-    {{ user_home.stdout }}/{{ certificate_path }}/kube-scheduler"
-  delegate_to: 127.0.0.1
+    {{ user_home }}/{{ certificate_path }}/kube-scheduler"
   when: not ks_pem.stat.exists
 
 - name: Check kubernetes certificate
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/kubernetes.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/kubernetes.pem"
   register: k8s_pem
-  delegate_to: 127.0.0.1
 
 - name: Generate kubernetes certificates
   shell: "cfssl gencert \
-    -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+    -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json \
     -hostname={{ cert_hostname }} \
     -profile=kubernetes \
     {{ role_path }}/templates/kubernetes-csr.json | cfssljson -bare \
-    {{ user_home.stdout }}/{{ certificate_path }}/kubernetes"
-  delegate_to: 127.0.0.1
+    {{ user_home }}/{{ certificate_path }}/kubernetes"
   when: not k8s_pem.stat.exists
 
 - name: Check Service Account certificate
   stat:
-    path: "{{ user_home.stdout }}/{{ certificate_path }}/service-account.pem"
+    path: "{{ user_home }}/{{ certificate_path }}/service-account.pem"
   register: sa_pem
-  delegate_to: 127.0.0.1
 
 - name: Generate Service Account certificates
   shell: "cfssl gencert \
-    -ca={{ user_home.stdout }}/{{ certificate_path }}/ca.pem \
-    -ca-key={{ user_home.stdout }}/{{ certificate_path }}/ca-key.pem \
+    -ca={{ user_home }}/{{ certificate_path }}/ca.pem \
+    -ca-key={{ user_home }}/{{ certificate_path }}/ca-key.pem \
     -config={{ role_path }}/templates/ca-config.json \
     -profile=kubernetes \
     {{ role_path }}/templates/service-account-csr.json | cfssljson -bare \
-    {{ user_home.stdout }}/{{ certificate_path }}/service-account"
-  delegate_to: 127.0.0.1
+    {{ user_home }}/{{ certificate_path }}/service-account"
   when: not sa_pem.stat.exists

@@ -7,12 +7,10 @@
   stat:
     path: "{{ ansible_facts['user_dir'] }}/{{ certificate_path }}/encryption-config.yml"
   register: enc_key
-  delegate_to: 127.0.0.1
 
 - name: Create encryption config file
   template:
     src: encryption-config.yml.j2
     dest: "{{ ansible_facts['user_dir'] }}/{{ certificate_path }}/encryption-config.yml"
     mode: '0644'
-  delegate_to: 127.0.0.1
   when: not enc_key.stat.exists

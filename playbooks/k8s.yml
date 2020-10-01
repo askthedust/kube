@@ -1,0 +1,28 @@
+---
+#- hosts: 127.0.0.1
+#  connection: local
+
+- hosts: local
+  gather_facts: true
+  become: false
+  become_method: sudo
+  vars_files:
+    - "./vars/generic_vars.yml"
+
+  roles:
+    - {role: resolv-hosts, tags: ["hosts"]}
+    - {role: client, tags: ["client"]}
+    - {role: pki, tags: ["pki"]}
+    - {role: kube-config, tags: ["config"]}
+    - {role: data-encryption, tags: ["data-encryption"]}
+#    - {role: test, tags: ["test"]}
+
+- hosts: all:!local
+  gather_facts: true
+  become: false
+  become_method: sudo
+  vars_files:
+    - "./vars/generic_vars.yml"
+
+  roles:
+    - {role: send_file, tags: ["send"]}

@@ -1,4 +1,22 @@
 ---
 - name: Environment debug
   debug:
-    msg: "{{ ansible_facts['user_dir'] }}"
+    msg: "{{ user_home }}"
+
+- name:
+  set_fact:
+    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
+  loop:
+    "{{ controllers }}"
+
+- name: doppio
+  set_fact:
+    cert_hostname: "{{ ','.join((cert_hostname_list))}}"
+
+- name: lldlld
+  debug:
+    msg: "{{ cert_hostname_list }}"
+
+- name: lldlld
+  debug:
+    msg: "{{ cert_hostname }}"

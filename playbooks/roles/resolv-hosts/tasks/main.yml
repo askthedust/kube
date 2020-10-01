@@ -19,10 +19,14 @@
   when: mao is defined
 
 - name: Vagrant ssh key
-  shell: vagrant ssh-config node-1 | grep IdentityFile | awk '{print $2}'
+  shell: vagrant ssh-config loadbalancer | grep IdentityFile | awk '{print $2}'
   args:
     chdir: ../vagrant
   register: vagrant_ssh_key
+
+- name: check if file exists
+  stat: "{{ inventory_dir }}/vagrant_hosts"
+  register: vagrant_hosts
 
 - name: Add hosts to ansible host file
   template:
@@ -30,3 +34,4 @@
     dest: "{{ inventory_dir }}/vagrant_hosts"
   loop:
     "{{ merged_hosts }}"
+  when: not vagrant_hosts.stat.exists
