@@ -3,13 +3,19 @@
   debug:
     msg: "{{ user_home }}"
 
-- name:
+- name: add controller
   set_fact:
     cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
   loop:
     "{{ controllers }}"
 
-- name: doppio
+- name: add loadbalancer
+  set_fact:
+    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
+  loop:
+    "{{ load_balancer }}"
+
+- name: create cert string
   set_fact:
     cert_hostname: "{{ ','.join((cert_hostname_list))}}"
 

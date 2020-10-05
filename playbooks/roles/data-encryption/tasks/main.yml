@@ -5,12 +5,12 @@
 
 - name: Check if key already exists
   stat:
-    path: "{{ ansible_facts['user_dir'] }}/{{ certificate_path }}/encryption-config.yml"
+    path: "{{ ansible_facts['user_dir'] }}/{{ certificate_path }}/encryption-config.yaml"
   register: enc_key
 
 - name: Create encryption config file
   template:
-    src: encryption-config.yml.j2
-    dest: "{{ ansible_facts['user_dir'] }}/{{ certificate_path }}/encryption-config.yml"
+    src: encryption-config.yaml.j2
+    dest: "{{ ansible_facts['user_dir'] }}/{{ certificate_path }}/encryption-config.yaml"
     mode: '0644'
   when: not enc_key.stat.exists

@@ -5,6 +5,22 @@
     state: directory
     mode: '0755'
 
+- name: add controller
+  set_fact:
+    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
+  loop:
+    "{{ controllers }}"
+
+- name: add loadbalancer
+  set_fact:
+    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
+  loop:
+    "{{ load_balancer }}"
+
+- name: create cert string
+  set_fact:
+    cert_hostname: "{{ ','.join((cert_hostname_list))}}"
+
 - name: Check if CA already exists
   stat:
     path: "{{ user_home }}/{{ certificate_path }}/ca.pem"

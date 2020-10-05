@@ -1,0 +1,54 @@
+---
+- name: create directory for kubernetes configuration
+  file:
+    path: "{{ k8s_conf_path }}"
+    state: directory
+    mode: '0755'
+
+- name: download all the binaries
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ k8s_ver }}/bin/linux/amd64/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: '0755'
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubectl
+
+- name: create directory for kubernetes
+  file:
+    path: "{{ k8s_lib_path }}"
+    state: directory
+    mode: '0755'
+
+- name: copy certificates and configs
+  copy:
+    src: "/home/{{ remote_user }}/{{ item }}"
+    dest: "{{ k8s_lib_path }}/{{ item }}"
+    remote_src: yes
+  with_items:
+    - ca.pem
+    - ca-key.pem
+    - kubernetes-key.pem
+    - kubernetes.pem
+    - service-account-key.pem
+    - service-account.pem
+    - encryption-config.yaml
+    - kube-controller-manager.kubeconfig
+
+- name: Create systemd for kube-apiserver
+  template:
+    src: kube-apiserver.service.j2
+    dest: "/etc/systemd/system/kube-apiserver.service"
+    mode: '0644'
+  loop:
+    "{{ controllers }}"
+  when: inventory_hostname == item.name
+  delegate_to: "{{ item.ip }}"
+
+- name: Create systemd for kube-controller-manager
+  template:
+    src: kube-controller-manager.service.j2
+    dest: "/etc/systemd/system/kube-controller-manager.service"
+    mode: '0644'

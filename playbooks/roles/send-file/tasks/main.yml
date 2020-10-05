@@ -1,0 +1,59 @@
+---
+- name: local user
+  shell: "echo $HOME"
+  register: local_user_home
+  delegate_to: 127.0.0.1
+
+- name: copy certificates and configuration in common between nodes
+  copy:
+    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    dest: "/home/{{ remote_user }}/"
+    force: no
+    mode: '0644'
+  with_items:
+    - ca.pem
+    - kube-proxy.kubeconfig
+  when: inventory_hostname == "node-1" or inventory_hostname == "node-2"
+
+- name: copy certificates and configuration into node-1
+  copy:
+    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    dest: "/home/{{ remote_user }}/"
+    force: no
+    mode: '0644'
+  with_items:
+    - node-1-key.pem
+    - node-1.pem
+    - node-1.kubeconfig
+  when: inventory_hostname == "node-1"
+
+- name: copy certificates and configuration into node-2
+  copy:
+    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    dest: "/home/{{ remote_user }}/"
+    force: no
+    mode: '0644'
+  with_items:
+    - node-2-key.pem
+    - node-2.pem
+    - node-2.kubeconfig
+  when: inventory_hostname == "node-2"
+
+- name: copy certificates and configuration into master nodes
+  copy:
+    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    dest: "/home/{{ remote_user }}/"
+    force: no
+    mode: '0644'
+  with_items:
+    - ca.pem
+    - ca-key.pem
+    - kubernetes-key.pem
+    - kubernetes.pem
+    - service-account-key.pem
+    - service-account.pem
+    - admin.kubeconfig
+    - kube-controller-manager.kubeconfig
+    - kube-scheduler.kubeconfig
+    - encryption-config.yaml
+  when: inventory_hostname == "master-1" or inventory_hostname == "master-2"

@@ -1,0 +1,68 @@
+---
+- name: Download etcd binary
+  get_url:
+    url: "https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: "/home/{{ remote_user }}/"
+    mode: '0644'
+  when: etcd_upgrade
+
+- name: unarchive etcd
+  unarchive:
+    src: "/home/{{ remote_user }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: "/home/{{ remote_user }}/"
+    remote_src: yes
+  when: etcd_upgrade
+
+- name: move etcd executable to local bin
+  copy:
+    src: "/home/{{ remote_user }}/etcd-{{ etcd_version }}-linux-amd64/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    remote_src: yes
+    mode: '0755'
+  with_items:
+    - etcd
+    - etcdctl
+  when: etcd_upgrade
+
+- name: create directory for etcd
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /etc/etcd
+    - /var/lib/etcd
+  when: etcd_upgrade
+
+- name: copy certificates into etcd directory
+  copy:
+    src: "/home/{{ remote_user }}/{{ item }}"
+    dest: "/etc/etcd/{{ item }}"
+    remote_src: yes
+  with_items:
+    - ca.pem
+    - kubernetes-key.pem
+    - kubernetes.pem
+  when: etcd_upgrade
+
+- name: Create etcd service file
+  template:
+    src: etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
+    mode: '0644'
+  loop:
+    "{{ controllers }}"
+  when: inventory_hostname == item.name and etcd_upgrade
+  delegate_to: "{{ item.ip }}"
+  notify: etcd-start
+
+- name: test cluster
+  shell: "sudo ETCDCTL_API=3 etcdctl member list \
+    --endpoints=https://127.0.0.1:2379 \
+    --cacert=/etc/etcd/ca.pem \
+    --cert=/etc/etcd/kubernetes.pem \
+    --key=/etc/etcd/kubernetes-key.pem"
+  register: etcd_cluster_check
+
+- name: print etcd cluster check
+  debug:
+    msg: "{{ etcd_cluster_check.stdout }}"

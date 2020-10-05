@@ -15,7 +15,7 @@
     - {role: pki, tags: ["pki"]}
     - {role: kube-config, tags: ["config"]}
     - {role: data-encryption, tags: ["data-encryption"]}
-#    - {role: test, tags: ["test"]}
+    - {role: test, tags: ["test"]}
 
 - hosts: all:!local
   gather_facts: true
@@ -25,4 +25,15 @@
     - "./vars/generic_vars.yml"
 
   roles:
-    - {role: send_file, tags: ["send"]}
+    - {role: send-file, tags: ["send"]}
+
+- hosts: masters
+  gather_facts: true
+  become: true
+  become_method: sudo
+  vars_files:
+    - "./vars/generic_vars.yml"
+
+  roles:
+    - {role: install-etcd, tags: ["etcd"]}
+    - {role: install-kubernetes, tags: ["kubernetes"]}
