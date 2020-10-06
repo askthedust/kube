@@ -36,6 +36,7 @@
     - service-account.pem
     - encryption-config.yaml
     - kube-controller-manager.kubeconfig
+    - kube-scheduler.kubeconfig
 
 - name: Create systemd for kube-apiserver
   template:
@@ -52,3 +53,26 @@
     src: kube-controller-manager.service.j2
     dest: "/etc/systemd/system/kube-controller-manager.service"
     mode: '0644'
+
+- name: Create kube-scheduler yaml
+  template:
+    src: kube-scheduler.yaml.j2
+    dest: "/etc/kubernetes/config/kube-scheduler.yaml"
+    mode: '0644'
+
+- name: Create systemd for kube-scheduler
+  template:
+    src: kube-scheduler.service.j2
+    dest: "/etc/systemd/system/kube-scheduler.service"
+    mode: '0644'
+  notify: kube-restart
+
+- name: Check components are working
+  shell: "kubectl get componentstatuses --kubeconfig /home/{{ remote_user }}/admin.kubeconfig"
+  register: components
+  when: inventory_hostname == "master-1"
+
+- name: debug
+  debug:
+    msg: "{{ components.stdout_lines | to_nice_yaml}}"
+  when: inventory_hostname == "master-1"

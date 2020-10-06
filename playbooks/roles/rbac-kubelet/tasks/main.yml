@@ -1,0 +1,15 @@
+---
+- name: copy files into master
+  copy:
+    src: "{{ item }}"
+    dest: "/home/{{ remote_user }}/{{ item }}"
+    mode: '0644'
+  with_items:
+    - cluster_role.yml
+    - cluster_role_binding.yml
+
+- name: execute kubectl apply for cluster role
+  shell: "kubectl apply --kubeconfig /home/{{ remote_user }}/admin.kubeconfig -f /home/{{ remote_user }}/{{ item }}"
+  with_items:
+    - cluster_role.yml
+    - cluster_role_binding.yml

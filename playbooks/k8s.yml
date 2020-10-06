@@ -37,3 +37,14 @@
   roles:
     - {role: install-etcd, tags: ["etcd"]}
     - {role: install-kubernetes, tags: ["kubernetes"]}
+    - {role: health-check, tags: ["health-check"]}
+
+- hosts: master-1
+  gather_facts: true
+  become: true
+  become_method: sudo
+  vars_files:
+    - "./vars/generic_vars.yml"
+
+  roles:
+    - { role: rbac-kubelet, tags: ["rbac-kubelet"] }

@@ -1,7 +1,11 @@
 ---
 - name: Generate data encryption
+  shell: "head -c 32 /dev/urandom | base64"
+  register: random_string
+
+- name: get string
   set_fact:
-    encryption_key: "{{ lookup('password', '/dev/null length=45') }}"
+    encryption_key: "{{ random_string.stdout }}"
 
 - name: Check if key already exists
   stat:
