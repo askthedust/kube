@@ -1,21 +1,24 @@
 # Readme
+Short description of the steps to reproduce the environment
 
-## What certificates upload and where:
-- worker nodes:
-  - scp ca.pem node-1-key.pem node-1.pem user@node-1
-  - scp ca.pem node-2-key.pem node-2.pem user@node-2
-- controllers nodes:
-  - scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem service-account-key.pem service-account.pem user@master-1
-  - scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem service-account-key.pem service-account.pem user@master-2
+## Requirements
+- `Ansible` you can install using pip: `pip install -u ansible`
+- `Virtualbox` as the hypervisor for `Vagrant`: [virtualbox](https://www.virtualbox.org/wiki/Downloads)
+- `Vagrant` will be the wrapper to interact with `Virtualbox` to provide the VMs: [vagrant](https://www.vagrantup.com/downloads.html)  
 
-## Copy configs to nodes
-- worker nodes:
-  - scp node-1.kubeconfig kube-proxy.kubeconfig user@node-1:/home/user/
-  - scp node-2.kubeconfig kube-proxy.kubeconfig user@node-2:/home/user/
-- controller nodes:
-  - scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig user@master-1
-  - scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig user@master-2
+## Configure the Vagrantfile
+In the directory `vagrant` there is a file called `Vagrantfile` the current file version is configured to create 5 
+VMs, composed as following: 
+- 2 nodes (workers)
+- 2 masters (controllers)
+- 1 load balancer
 
-## Copy the encryption-key to controller nodes:
-- scp encryption-config.yml user@master-1
-- scp encryption-config.yml user@master-2
+Here also there are information about the IP addresses that will be configured. If you change them, you also have to 
+change the in the file `playbooks/vars/generci_vars.yml` to be coherent with them. This is **important!**
+
+### Steps to rollout and provisioning
+1. In the *vagrant* directory rollout the VMs: `vagrant up`
+2. Check the file *playbooks/vars/generic_vars.yml and if needed, just change the values to fit your environment
+2. In the root of the project run ansible: `ansible-playbook playbooks/k8s.yml --diff -t hosts -K` 
+   *If you didn't change IP addresses or any other information about about the hosts, you don't need to run thi command*
+3. Still from the root of the project, run ansible: `ansible-playbook playbooks/k8s.yml --diff -K`

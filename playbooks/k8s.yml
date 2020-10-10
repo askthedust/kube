@@ -15,7 +15,7 @@
     - {role: pki, tags: ["pki"]}
     - {role: kube-config, tags: ["config"]}
     - {role: data-encryption, tags: ["data-encryption"]}
-    - {role: test, tags: ["test"]}
+    #- {role: test, tags: ["test"]}
 
 - hosts: all:!local
   gather_facts: true
