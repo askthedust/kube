@@ -1,0 +1,18 @@
+---
+- name: containerd restart
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+    name: containerd
+  listen: containerd-restart
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: containerd start
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: containerd
+  listen: containerd-start
+  ignore_errors: "{{ ansible_check_mode }}"
