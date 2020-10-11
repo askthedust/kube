@@ -38,8 +38,9 @@
     - {role: install-etcd, tags: ["etcd"]}
     - {role: install-kubernetes, tags: ["kubernetes"]}
     - {role: health-check, tags: ["health-check"]}
+    - { role: rbac-kubelet, tags: ["rbac-kubelet"], when: inventory_hostname == "master-1" }
 
-- hosts: master-1
+- hosts: loadbalancer
   gather_facts: true
   become: true
   become_method: sudo
@@ -47,4 +48,4 @@
     - "./vars/generic_vars.yml"
 
   roles:
-    - { role: rbac-kubelet, tags: ["rbac-kubelet"] }
+    - { role: api-loadbalancer, tags: ["api-loadbalancer"] }

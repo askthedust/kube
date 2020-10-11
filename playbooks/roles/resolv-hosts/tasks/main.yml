@@ -5,7 +5,7 @@
   with_items:
     - "{{ workers }}"
     - "{{ controllers }}"
-    - "{{ load_balancer }}"
+    - "{{ loadbalancer }}"
 
 - name: Add hosts into system hosts file
   blockinfile:

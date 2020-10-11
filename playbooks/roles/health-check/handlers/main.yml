@@ -1,8 +1,0 @@
----
-- name: nginx restart
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    enabled: yes
-    name: nginx
-  listen: nginx-restart

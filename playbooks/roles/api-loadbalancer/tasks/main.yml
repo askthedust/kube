@@ -1,0 +1,33 @@
+---
+- name: Create tcpconf.d directory
+  file:
+    path: "/etc/nginx/tcpconf.d"
+    state: directory
+    mode: '0755'
+
+- name: Add include to nginx conf
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    line: "include /etc/nginx/tcpconf.d/*;"
+    state: present
+
+- name: Create kubernetes conf file for nginx
+  template:
+    src: kubernetes.conf.j2
+    dest: "/etc/nginx/tcpconf.d/kubernetes.conf"
+    mode: '0644'
+  loop:
+    "{{ controllers }}"
+  notify: nginx-restart
+
+- name: check if the loadbalancer is working
+  uri:
+    url: https://localhost:6443/version
+    return_content: yes
+    validate_certs: no
+  register: loadbalancer_check
+  failed_when: loadbalancer_check.status != 200
+
+- name: debug loadbalancer
+  debug:
+    msg: "Status: {{ loadbalancer_check.status }}\n{{ loadbalancer_check.content }}"

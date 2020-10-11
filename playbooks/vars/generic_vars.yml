@@ -18,8 +18,8 @@ workers:
   - name: node-2
     ip: 192.168.50.22
 
-load_balancer:
-  - name: load-balancer
+loadbalancer:
+  - name: loadbalancer
     ip: 192.168.50.30
 
 controllers:

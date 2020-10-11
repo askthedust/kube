@@ -5,7 +5,7 @@
       shell: "kubectl config set-cluster kubernetes \
         --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
         --embed-certs=true \
-        --server=https://{{ load_balancer[0]['ip'] }}:6443 \
+        --server=https://{{ loadbalancer[0]['ip'] }}:6443 \
         --kubeconfig={{ user_home }}/{{ certificate_path }}/{{ item.name }}.kubeconfig"
       loop:
         "{{ workers }}"
@@ -39,7 +39,7 @@
       shell: "kubectl config set-cluster kubernetes \
         --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
         --embed-certs=true \
-        --server=https://{{ load_balancer[0]['ip'] }}:6443 \
+        --server=https://{{ loadbalancer[0]['ip'] }}:6443 \
         --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-proxy.kubeconfig"
 
     - name: kube-proxy set credentials

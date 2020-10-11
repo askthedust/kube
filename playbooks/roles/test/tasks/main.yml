@@ -13,7 +13,7 @@
   set_fact:
     cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
   loop:
-    "{{ load_balancer }}"
+    "{{ loadbalancer }}"
 
 - name: create cert string
   set_fact:

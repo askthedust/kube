@@ -1,9 +1,4 @@
 ---
-- name: Install nginx
-  apt:
-    name: nginx
-    state: present
-
 - name: copy nginx configuration
   template:
     src: kubernetes.default.svc.cluster.local.j2
@@ -20,9 +15,7 @@
 - name: check healthz is working
   shell: 'curl -H "Host: kubernetes.default.svc.cluster.local" -i http://127.0.0.1/healthz'
   register: health_check
-  when: inventory_hostname == "master-1"
 
 - name: debug health check
   debug:
     msg: "{{ health_check.stdout_lines | to_nice_json }}"
-  when: inventory_hostname == "master-1"

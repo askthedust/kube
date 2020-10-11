@@ -1,0 +1,13 @@
+stream {
+    upstream kubernetes {
+        {% for item in controllers %}
+        server {{ item.ip }}:6443;
+        {% endfor %}
+    }
+
+    server {
+        listen 6443;
+        listen 443;
+        proxy_pass kubernetes;
+    }
+}
