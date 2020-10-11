@@ -1,0 +1,66 @@
+---
+- name: install requirements
+  apt:
+    update_cache: yes
+    name:
+      - socat
+      - conntrack
+      - ipset
+
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - /etc/cni/net.d
+    - /opt/cni/bin
+    - /var/lib/kubelet
+    - /var/lib/kube-proxy
+    - /var/lib/kubernetes
+    - /var/run/kubernetes
+
+- name: Dowload kubernetes related binary
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ k8s_ver }}/bin/linux/amd64/{{ item }}"
+    dest: "{{ local_executable_path }}/{{ item }}"
+    mode: '0755'
+  with_items:
+    - kubectl
+    - kube-proxy
+    - kubelet
+
+- name: Dowload kubernetes utilities
+  get_url:
+    url: "{{ item }}"
+    dest: "/home/{{ remote_user }}/"
+    mode: '0755'
+  with_items:
+    - "https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ cri_tools_ver }}/crictl-v{{ cri_tools_ver }}-linux-amd64.tar.gz"
+    - "https://github.com/opencontainers/runc/releases/download/v1.0.0-rc91/runc.amd64"
+    - "https://github.com/containernetworking/plugins/releases/download/v{{ cni_ver }}/cni-plugins-linux-amd64-v{{ cni_ver }}.tgz"
+    - "https://github.com/containerd/containerd/releases/download/v{{ containerd_ver }}/containerd-{{ containerd_ver }}-linux-amd64.tar.gz"
+    - "https://storage.googleapis.com/kubernetes-the-hard-way/runsc"
+
+- name: move runc to /usr/bin/local
+  copy:
+    src: "/home/{{ remote_user }}/{{ item.src }}"
+    dest: "{{ local_executable_path }}/{{ item.dest }}"
+    mode: '0755'
+    remote_src: yes
+  with_items:
+    - {src: "runc.amd64", dest: "runc"}
+    - {src: "runsc", dest: "runsc"}
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Unarchive a file that is already on the remote machine
+  unarchive:
+    src: "/home/{{ remote_user }}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0755'
+    remote_src: yes
+  with_items:
+    - {src: "crictl-v{{ cri_tools_ver }}-linux-amd64.tar.gz", dest: "{{ local_executable_path }}/"}
+    - {src: "cni-plugins-linux-amd64-v{{ cni_ver }}.tgz", dest: "/opt/cni/bin/"}
+    - {src: "containerd-{{ containerd_ver }}-linux-amd64.tar.gz", dest: "/"}
+  ignore_errors: "{{ ansible_check_mode }}"

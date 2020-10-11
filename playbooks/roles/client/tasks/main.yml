@@ -2,7 +2,7 @@
 - name: Dowload cfssl cfssljson
   get_url:
     url: "{{ cfssl_url }}{{ item }}"
-    dest: "{{ local_executable_path }}{{ item }}"
+    dest: "{{ local_executable_path }}/{{ item }}"
     mode: '0755'
   become: true
   with_items:
@@ -12,7 +12,7 @@
 - name: Dowload kubectl
   get_url:
     url: "{{ k8s_url }}{{ item }}"
-    dest: "{{ local_executable_path }}{{ item }}"
+    dest: "{{ local_executable_path }}/{{ item }}"
     mode: '0755'
   become: true
   with_items:

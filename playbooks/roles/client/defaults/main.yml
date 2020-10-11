@@ -2,7 +2,4 @@
 cfssl_version: 1.4.1
 cfssl_url: "https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/darwin/"
 
-local_executable_path: "/usr/local/bin/"
-
-kubectl_version: "v1.18.6"
-k8s_url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/darwin/amd64/"
+k8s_url: "https://storage.googleapis.com/kubernetes-release/release/{{ k8s_ver }}/bin/darwin/amd64/"

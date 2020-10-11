@@ -49,3 +49,14 @@
 
   roles:
     - { role: api-loadbalancer, tags: ["api-loadbalancer"] }
+
+- hosts: workers
+  gather_facts: true
+  become: true
+  become_method: sudo
+  vars_files:
+    - "./vars/generic_vars.yml"
+
+  roles:
+    - {role: install-workers, tags: ["install-workers"]}
+    - {role: configure-containerd, tags: ["containerd"]}
