@@ -1,0 +1,33 @@
+---
+- name: copy kubeproxy confing to /var/lib/kube-proxy
+  copy:
+    src: "/home/{{ remote_user }}/{{item }}"
+    dest: "/var/lib/kube-proxy/kubeconfig"
+    mode: '0644'
+    remote_src: yes
+  with_items:
+    - "kube-proxy.kubeconfig"
+
+- name: Create kubeproxy conf
+  template:
+    src: kube-proxy-config.yaml.j2
+    dest: "/var/lib/kube-proxy/kube-proxy-config.yaml"
+    mode: '0644'
+
+- name: Create kubeproxy service
+  template:
+    src: kube-proxy.service.j2
+    dest: "/etc/systemd/system/kube-proxy.service"
+    mode: '0644'
+  notify: daemon-start
+
+- name: check nodes
+  run_once: yes
+  shell: "kubectl get nodes"
+  register: check_nodes
+  delegate_to: master-1
+
+- name: debug
+  run_once: yes
+  debug:
+    msg: "{{ check_nodes.stdout}}"

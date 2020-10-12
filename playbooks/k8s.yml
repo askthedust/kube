@@ -60,3 +60,5 @@
   roles:
     - {role: install-workers, tags: ["install-workers"]}
     - {role: configure-containerd, tags: ["containerd"]}
+    - {role: kubelet, tags: ["kubelet"]}
+    - {role: kubeproxy, tags: ["kubeproxy"]}

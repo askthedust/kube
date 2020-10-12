@@ -1,0 +1,26 @@
+---
+- name: daemon restart
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item }}"
+  listen: daemon-restart
+  with_items:
+    - containerd
+    - kubelet
+    - kube-proxy
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: daemon start
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: "{{ item }}"
+  listen: daemon-start
+  with_items:
+    - containerd
+    - kubelet
+    - kube-proxy
+  ignore_errors: "{{ ansible_check_mode }}"
