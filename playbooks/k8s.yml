@@ -62,3 +62,13 @@
     - {role: configure-containerd, tags: ["containerd"]}
     - {role: kubelet, tags: ["kubelet"]}
     - {role: kubeproxy, tags: ["kubeproxy"]}
+
+- hosts: local
+  gather_facts: true
+  become: false
+  become_method: sudo
+  vars_files:
+    - "./vars/generic_vars.yml"
+
+  roles:
+    - {role: kubectl, tags: ["kubectl"]}
