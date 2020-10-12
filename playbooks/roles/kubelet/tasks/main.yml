@@ -1,0 +1,40 @@
+---
+- name: copy certificates to /var/lib/kubelet
+  copy:
+    src: "/home/{{ remote_user }}/{{item }}"
+    dest: "/var/lib/kubelet/{{ item }}"
+    mode: '0644'
+    remote_src: yes
+  with_items:
+    - "{{ inventory_hostname }}-key.pem"
+    - "{{ inventory_hostname }}.pem"
+
+- name: copy kubeconfig to /var/lib/kubelet
+  copy:
+    src: "/home/{{ remote_user }}/{{item }}"
+    dest: "/var/lib/kubelet/kubeconfig"
+    mode: '0644'
+    remote_src: yes
+  with_items:
+    - "{{ inventory_hostname }}.kubeconfig"
+
+- name: copy ca.pem to /var/lib/kubernetes
+  copy:
+    src: "/home/{{ remote_user }}/{{item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
+    mode: '0644'
+    remote_src: yes
+  with_items:
+    - "ca.pem"
+
+- name: Create kubelet conf
+  template:
+    src: kubelet-config.yaml.j2
+    dest: "/var/lib/kubelet/kubelet-config.yaml"
+    mode: '0644'
+
+- name: Create kubelet service
+  template:
+    src: kubelet.service.j2
+    dest: "/etc/systemd/system/kubelet.service"
+    mode: '0644'
