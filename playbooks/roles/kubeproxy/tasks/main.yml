@@ -21,6 +21,12 @@
     mode: '0644'
   notify: daemon-start
 
+- meta: flush_handlers
+
+- name: wait the cluster is consistent
+  pause:
+    seconds: 10
+
 - name: check nodes
   run_once: yes
   shell: "kubectl get nodes"
@@ -28,6 +34,6 @@
   delegate_to: master-1
 
 - name: debug
-  run_once: yes
   debug:
     msg: "{{ check_nodes.stdout}}"
+  delegate_to: master-1

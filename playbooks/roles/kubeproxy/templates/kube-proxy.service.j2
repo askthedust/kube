@@ -4,7 +4,9 @@ Documentation=https://github.com/kubernetes/kubernetes
 
 [Service]
 ExecStart=/usr/local/bin/kube-proxy \
-  --config=/var/lib/kube-proxy/kube-proxy-config.yaml
+  --config=/var/lib/kube-proxy/kube-proxy-config.yaml \
+  --proxy-mode=userspace \
+  --masquerade-all
 Restart=on-failure
 RestartSec=5
 

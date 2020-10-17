@@ -7,7 +7,8 @@ k8s_ver: "v1.18.6"
 containerd_ver: "1.3.6"
 cni_ver: "0.8.6"
 cri_tools_ver: "1.18.0"
-etcd_upgrade: false
+etcd_upgrade: true
+CIDR: "10.200.0.0/16"
 k8s_conf_path: "/etc/kubernetes/config"
 k8s_lib_path: "/var/lib/kubernetes"
 ## kept only to check if the order is important
@@ -19,8 +20,10 @@ merged_hosts: []
 workers:
   - name: node-1
     ip: 192.168.50.21
+    cidr: 10.200.0.0/18
   - name: node-2
     ip: 192.168.50.22
+    cidr: 10.200.64.0/18
 
 loadbalancer:
   - name: loadbalancer

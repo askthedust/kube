@@ -4,3 +4,5 @@
     name: nginx
     state: present
   notify: nginx-start
+
+- meta: flush_handlers

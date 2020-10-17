@@ -32,9 +32,15 @@
     src: kubelet-config.yaml.j2
     dest: "/var/lib/kubelet/kubelet-config.yaml"
     mode: '0644'
+#  loop:
+#    "{{ workers }}"
+#  when: inventory_hostname == item.name
 
 - name: Create kubelet service
   template:
     src: kubelet.service.j2
     dest: "/etc/systemd/system/kubelet.service"
     mode: '0644'
+  loop:
+    "{{ workers }}"
+  when: item.name == inventory_hostname

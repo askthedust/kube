@@ -1,28 +1,32 @@
 ---
-- name: Environment debug
+#- name: Environment debug
+#  debug:
+#    msg: "{{ user_home }}"
+#
+#- name: add controller
+#  set_fact:
+#    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
+#  loop:
+#    "{{ controllers }}"
+#
+#- name: add loadbalancer
+#  set_fact:
+#    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
+#  loop:
+#    "{{ loadbalancer }}"
+#
+#- name: create cert string
+#  set_fact:
+#    cert_hostname: "{{ ','.join((cert_hostname_list))}}"
+#
+#- name: lldlld
+#  debug:
+#    msg: "{{ cert_hostname_list }}"
+#
+#- name: lldlld
+#  debug:
+#    msg: "{{ cert_hostname }}"
+
+- name: debug
   debug:
-    msg: "{{ user_home }}"
-
-- name: add controller
-  set_fact:
-    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
-  loop:
-    "{{ controllers }}"
-
-- name: add loadbalancer
-  set_fact:
-    cert_hostname_list: "{{ cert_hostname_list + [item.ip, item.name]}}"
-  loop:
-    "{{ loadbalancer }}"
-
-- name: create cert string
-  set_fact:
-    cert_hostname: "{{ ','.join((cert_hostname_list))}}"
-
-- name: lldlld
-  debug:
-    msg: "{{ cert_hostname_list }}"
-
-- name: lldlld
-  debug:
-    msg: "{{ cert_hostname }}"
+    msg: "{{ inventory_dir }}"

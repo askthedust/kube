@@ -72,3 +72,4 @@
 
   roles:
     - {role: kubectl, tags: ["kubectl"]}
+    - {role: weavenet, tags: ["weavenet"]}

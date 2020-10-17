@@ -20,6 +20,8 @@
     "{{ controllers }}"
   notify: nginx-restart
 
+- meta: flush_handlers
+
 - name: check if the loadbalancer is working
   uri:
     url: https://localhost:6443/version

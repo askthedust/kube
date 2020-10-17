@@ -12,6 +12,8 @@
     state: link
   notify: nginx-restart
 
+- meta: flush_handlers
+
 - name: check healthz is working
   shell: 'curl -H "Host: kubernetes.default.svc.cluster.local" -i http://127.0.0.1/healthz'
   register: health_check

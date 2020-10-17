@@ -67,6 +67,8 @@
     mode: '0644'
   notify: kube-restart
 
+- meta: flush_handlers
+
 - name: Check components are working
   shell: "kubectl get componentstatuses --kubeconfig /home/{{ remote_user }}/admin.kubeconfig"
   register: components
