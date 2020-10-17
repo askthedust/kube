@@ -1,0 +1,35 @@
+---
+- name: wait the cluster is consistent
+  pause:
+    seconds: 10
+
+- name: install weavenet
+  shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=10.200.0.0/16"
+
+- name: check pods
+  shell: kubectl get pods -n kube-system
+  register: kube_out
+
+- name: wait networking is consistent
+  pause:
+    seconds: 10
+
+- name: testing
+  block:
+    - name: create two nginx replica deployment
+      shell: "kubectl apply -f {{ role_path }}/files/nginx_replicas.yml"
+
+    - name: check if service exists
+      shell: kubectl get svc nginx --ignore-not-found -o jsonpath="{.metadata.name}"
+      register: service_nginx
+
+    - name: expose deployment as service
+      shell: "kubectl expose deployment/nginx"
+      when: service_nginx.stdout != "nginx"
+
+    - name: deploy busybox
+      shell: "kubectl run busybox --image=radial/busyboxplus:curl --command -- sleep 3600"
+
+    - name: check busybox
+      shell: kubectl get pods -l run=busybox -o jsonpath="{.items[0].metadata.name}"
+      register: busyb

@@ -55,6 +55,12 @@
   delegate_to: "{{ item.ip }}"
   notify: etcd-start
 
+- meta: flush_handlers
+
+- name: wait the cluster is consistent
+  pause:
+    seconds: 10
+
 - name: test cluster
   shell: "sudo ETCDCTL_API=3 etcdctl member list \
     --endpoints=https://127.0.0.1:2379 \

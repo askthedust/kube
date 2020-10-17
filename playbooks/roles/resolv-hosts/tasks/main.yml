@@ -25,7 +25,8 @@
   register: vagrant_ssh_key
 
 - name: check if file exists
-  stat: "{{ inventory_dir }}/vagrant_hosts"
+  stat:
+    path: "{{ inventory_dir }}/vagrant_hosts"
   register: vagrant_hosts
 
 - name: Add hosts to ansible host file

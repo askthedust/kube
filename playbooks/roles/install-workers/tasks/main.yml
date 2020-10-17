@@ -64,3 +64,11 @@
     - {src: "cni-plugins-linux-amd64-v{{ cni_ver }}.tgz", dest: "/opt/cni/bin/"}
     - {src: "containerd-{{ containerd_ver }}-linux-amd64.tar.gz", dest: "/"}
   ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Configure ipv4 forward
+  sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
