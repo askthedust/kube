@@ -5,7 +5,8 @@ and reusable with Ansible. My setup is a Mac and this is a pretty common.
 The goal is to have a working cluster locally, even with a balancer for the controllers, for testing purposes. 
 
 ## Requirements
-- `Python3` and `python3-venv` are already installed
+- Python3, pip and virtualenv installed, for virtualenv use pip:
+  - `pip install virtualenv`
 - At least 10 GB of ram, there will be created 5 VMs with 2GB of ram each one, you can change to 1GB in `Vagrantfile`
 - `Virtualbox` as the hypervisor for `Vagrant`: [virtualbox](https://www.virtualbox.org/wiki/Downloads)
 - `Vagrant` will be the wrapper to interact with `Virtualbox` to provide the VMs: [vagrant](https://www.vagrantup.com/downloads.html)
@@ -20,7 +21,7 @@ In the `Vagrantfile` there are also the information about IP addresses, memory a
 you have to change them also here: `playbooks/inventory/group_vars/all.yml`.
 
 ### Steps to rollout and provisioning
-1. Create and run the python venv: `python3 -m venv env && source env/bin/activate`
+1. Create and run the python venv: `virtualenv env && source env/bin/activate`
 2. Install pip requirements: `pip install -r requirements.txt`
 3. `cd vagrant` and run `vagrant up`, wait for the VMs are up and running
 4. Back to the root of the project and run ansible to generate hostfile: `ansible-playbook playbooks/k8s.yml --diff -t hosts`
