@@ -17,14 +17,14 @@ In the directory `vagrant` there is a file called `Vagrantfile` which is configu
 - 1 load balancer
 
 In the `Vagrantfile` there are also the information about IP addresses, memory an CPU for VMs. Changing IP addresses means 
-you have to change them also here: `playbooks/inventory/group_vars/all.yml`. In this case, you have to run for first the role with 
-the tag `hosts` and after you can run the entire playbook
+you have to change them also here: `playbooks/inventory/group_vars/all.yml`.
 
 ### Steps to rollout and provisioning
 1. Create and run the python venv: `python3 -m venv env && source env/bin/activate`
 2. Install pip requirements: `pip install -r requirements.txt`
 3. `cd vagrant` and run `vagrant up`, wait for the VMs are up and running
-4. Back to the root of the project and run ansible: `ansible-playbook playbooks/k8s.yml --diff -K` 
+4. Back to the root of the project and run ansible to generate hostfile: `ansible-playbook playbooks/k8s.yml --diff -t hosts`
+5. Run ansible again to provision the cluster: `ansible-playbook playbooks/k8s.yml --diff -K` 
 
 - Pause the environment: `cd vagrant` and run `vagrant halt`
 - Clean up: 
