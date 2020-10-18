@@ -72,3 +72,4 @@
 - name: print etcd cluster check
   debug:
     msg: "{{ etcd_cluster_check.stdout }}"
+  when: etcd_cluster_check is defined

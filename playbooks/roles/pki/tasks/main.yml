@@ -81,7 +81,7 @@
 - name: Print check for certificate
   debug:
     msg: "Certificates OK"
-  when: cert_out.stdout.find('CN=system:node:node-2')
+  when: cert_out is defined and cert_out.stdout.find('CN=system:node:node-2')
 
 - name: Check Controlelr manager certificate
   stat:

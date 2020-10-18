@@ -33,3 +33,4 @@
 - name: debug loadbalancer
   debug:
     msg: "Status: {{ loadbalancer_check.status }}\n{{ loadbalancer_check.content }}"
+  when: loadbalancer_check is defined

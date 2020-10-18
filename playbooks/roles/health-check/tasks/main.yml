@@ -21,3 +21,4 @@
 - name: debug health check
   debug:
     msg: "{{ health_check.stdout_lines | to_nice_json }}"
+  when: health_check is defined

@@ -37,3 +37,4 @@
   debug:
     msg: "{{ check_nodes.stdout}}"
   delegate_to: master-1
+  when: check_nodes is defined

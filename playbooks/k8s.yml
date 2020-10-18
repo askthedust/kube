@@ -1,7 +1,4 @@
 ---
-#- hosts: 127.0.0.1
-#  connection: local
-
 - hosts: local
   gather_facts: true
   become: false
@@ -15,7 +12,6 @@
     - {role: pki, tags: ["pki"]}
     - {role: kube-config, tags: ["config"]}
     - {role: data-encryption, tags: ["data-encryption"]}
-    #- {role: test, tags: ["test"]}
 
 - hosts: all:!local
   gather_facts: true
@@ -73,3 +69,4 @@
   roles:
     - {role: kubectl, tags: ["kubectl"]}
     - {role: weavenet, tags: ["weavenet"]}
+    - {role: dns, tags: ["dns"]}

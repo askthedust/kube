@@ -10,12 +10,12 @@
   shell: kubectl get pods -n kube-system
   register: kube_out
 
-- name: wait networking is consistent
-  pause:
-    seconds: 10
-
 - name: testing
   block:
+    - name: wait networking is consistent
+      pause:
+        seconds: 10
+
     - name: create two nginx replica deployment
       shell: "kubectl apply -f {{ role_path }}/files/nginx_replicas.yml"
 
@@ -33,3 +33,16 @@
     - name: check busybox
       shell: kubectl get pods -l run=busybox -o jsonpath="{.items[0].metadata.name}"
       register: busyb
+  when: test
+
+- name: clean up
+  block:
+    - name: delete busybox
+      shell: kubectl delete pod busybox --force
+
+    - name: delete nginx deploy
+      shell: kubectl delete deploy nginx
+
+    - name: delete nginx service
+      shell: kubectl delete svc nginx
+  when: clean_up

@@ -77,4 +77,4 @@
 - name: debug
   debug:
     msg: "{{ components.stdout_lines | to_nice_yaml}}"
-  when: inventory_hostname == "master-1"
+  when: inventory_hostname == "master-1" and components is defined

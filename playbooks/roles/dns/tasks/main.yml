@@ -1,0 +1,29 @@
+---
+- name: install core-dns
+  shell: kubectl apply -f https://storage.googleapis.com/kubernetes-the-hard-way/coredns-1.7.0.yaml
+
+- name: wait 5 seconds
+  pause:
+    seconds: 5
+- name: test dns
+  block:
+    - name: wait 5 seconds
+      pause:
+        seconds: 5
+
+    - name: deploy busybox
+      shell: "kubectl run busybox --image=busybox:1.28 --command -- sleep 3600"
+
+    - name: check nslookup
+      shell: "kubectl exec -ti busybox -- nslookup kubernetes"
+      register: bbox_dns
+
+    - name: debug
+      debug:
+        msg: "{{ bbox_dns.stdout }}"
+      when: bbox_dns is defined
+  when: test
+
+- name: clean up busybox
+  shell: "kubectl delete pod busybox --force"
+  when: bbox_dns is defined and clean_up
