@@ -7,7 +7,7 @@ The goal is to have a working cluster locally, even with a balancer for the cont
 ## Requirements
 - Python3, pip and virtualenv installed, for virtualenv use pip:
   - `pip install virtualenv`
-- At least 10 GB of ram, there will be created 5 VMs with 2GB of ram each one, you can change to 1GB in `Vagrantfile`
+- At least 8 GB of ram, there will be created 5 VMs (nodes 2GB each one, controllers and loadbalancer 1GB), in `Vagrantfile`
 - `Virtualbox` as the hypervisor for `Vagrant`: [virtualbox](https://www.virtualbox.org/wiki/Downloads)
 - `Vagrant` will be the wrapper to interact with `Virtualbox` to provide the VMs: [vagrant](https://www.vagrantup.com/downloads.html)
   
