@@ -7,7 +7,7 @@ k8s_ver: "v1.18.6"
 containerd_ver: "1.3.6"
 cni_ver: "0.8.6"
 cri_tools_ver: "1.18.0"
-etcd_upgrade: false
+etcd_upgrade: true
 test: false
 clean_up: false
 CIDR: "10.200.0.0/16"

@@ -4,7 +4,7 @@
   become: false
   become_method: sudo
   vars_files:
-    - "./vars/generic_vars.yml"
+    - "{{ inventory_dir }}/group_vars/all.yml"
 
   roles:
     - {role: resolv-hosts, tags: ["hosts"]}
@@ -17,8 +17,6 @@
   gather_facts: true
   become: false
   become_method: sudo
-  vars_files:
-    - "./vars/generic_vars.yml"
 
   roles:
     - {role: send-file, tags: ["send"]}
@@ -27,8 +25,6 @@
   gather_facts: true
   become: true
   become_method: sudo
-  vars_files:
-    - "./vars/generic_vars.yml"
 
   roles:
     - {role: install-etcd, tags: ["etcd"]}
@@ -40,8 +36,6 @@
   gather_facts: true
   become: true
   become_method: sudo
-  vars_files:
-    - "./vars/generic_vars.yml"
 
   roles:
     - { role: api-loadbalancer, tags: ["api-loadbalancer"] }
@@ -50,8 +44,6 @@
   gather_facts: true
   become: true
   become_method: sudo
-  vars_files:
-    - "./vars/generic_vars.yml"
 
   roles:
     - {role: install-workers, tags: ["install-workers"]}
@@ -63,8 +55,6 @@
   gather_facts: true
   become: false
   become_method: sudo
-  vars_files:
-    - "./vars/generic_vars.yml"
 
   roles:
     - {role: kubectl, tags: ["kubectl"]}

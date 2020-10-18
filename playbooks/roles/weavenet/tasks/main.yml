@@ -1,7 +1,7 @@
 ---
 - name: wait the cluster is consistent
   pause:
-    seconds: 10
+    seconds: 5
 
 - name: install weavenet
   shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=10.200.0.0/16"
@@ -15,6 +15,7 @@
     - name: wait networking is consistent
       pause:
         seconds: 10
+      when: not test
 
     - name: create two nginx replica deployment
       shell: "kubectl apply -f {{ role_path }}/files/nginx_replicas.yml"
