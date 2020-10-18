@@ -8,7 +8,7 @@ containerd_ver: "1.3.6"
 cni_ver: "0.8.6"
 cri_tools_ver: "1.18.0"
 etcd_upgrade: true
-test: false
+k8s_test: false
 clean_up: false
 CIDR: "10.200.0.0/16"
 k8s_conf_path: "/etc/kubernetes/config"

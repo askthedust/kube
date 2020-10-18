@@ -22,7 +22,7 @@
       debug:
         msg: "{{ bbox_dns.stdout }}"
       when: bbox_dns is defined
-  when: test
+  when: k8s_test
 
 - name: clean up busybox
   shell: "kubectl delete pod busybox --force"

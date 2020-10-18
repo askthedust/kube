@@ -37,3 +37,5 @@ the tag `hosts` and after you can run the entire playbook
 3. Add compatibility with newer version of ubuntu (or debian based)
 4. Make the network plugin configurable
 5. Make possible to bootstrap a smaller version of the cluster
+6. Add monitoring: prometheus and grafana
+7. Add logs: grafana/loki
