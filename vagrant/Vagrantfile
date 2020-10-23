@@ -1,5 +1,13 @@
+# encoding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+
 IMAGE_NAME = "ubuntu/xenial64"
-N = 2
+
+configs        = YAML.load_file('../inventory/group_vars/all.yml')
+vagrant_config = configs['configs']
 
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
@@ -9,7 +17,7 @@ Vagrant.configure("2") do |config|
         v.cpus = 1
     end
 
-    (1..N).each do |i|
+    (1..vagrant_config['number_master']).each do |i|
         config.vm.define "master-#{i}", primary: true do |master|
             master.vm.box = IMAGE_NAME
             master.vm.network "private_network", ip: "192.168.50.#{10+i}"
@@ -22,14 +30,6 @@ Vagrant.configure("2") do |config|
         loadbalancer.vm.network "private_network", ip: "192.168.50.30"
         loadbalancer.vm.hostname = "loadbalancer"
     end
-
-    (1..N).each do |i|
-        config.vm.define "node-#{i}" do |node|
-            node.vm.box = IMAGE_NAME
-            node.vm.network "private_network", ip: "192.168.50.#{20+i}"
-            node.vm.hostname = "node-#{i}"
-        end
-    end
 end
 
 Vagrant.configure("2") do |config|
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
         v.cpus = 1
     end
 
-    (1..N).each do |i|
+    (1..vagrant_config['number_node']).each do |i|
         config.vm.define "node-#{i}" do |node|
             node.vm.box = IMAGE_NAME
             node.vm.network "private_network", ip: "192.168.50.#{20+i}"

@@ -14,12 +14,17 @@ CIDR: "10.200.0.0/16"
 k8s_conf_path: "/etc/kubernetes/config"
 k8s_lib_path: "/var/lib/kubernetes"
 ## kept only to check if the order is important
-cert_hostname_list: [10.32.0.1,10.240.0.10,10.240.0.11,10.240.0.12,127.0.0.1,localhost,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local]
+cert_hostname_list: [10.32.0.1,127.0.0.1,localhost,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local]
 cert_hostname: []
 remote_user: vagrant
 vagrant_dir:
 merged_hosts: []
-workers:
+
+configs:
+    number_node: 2
+    number_master: 2
+
+workers_list:
   - name: node-1
     ip: 192.168.50.21
     cidr: 10.200.0.0/18
@@ -27,12 +32,18 @@ workers:
     ip: 192.168.50.22
     cidr: 10.200.64.0/18
 
-loadbalancer:
+loadbalancer_list:
   - name: loadbalancer
     ip: 192.168.50.30
 
-controllers:
+controllers_list:
   - name: master-1
     ip: 192.168.50.11
   - name: master-2
     ip: 192.168.50.12
+
+workers: "{{ workers_list[:configs.number_node] }}"
+
+controllers: "{{ controllers_list[:configs.number_master] }}"
+
+loadbalancer: "{{ loadbalancer_list }}"

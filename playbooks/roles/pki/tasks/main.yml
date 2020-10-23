@@ -75,13 +75,13 @@
   when: not workers_pem.stat.exists
 
 - name: Check node certificates
-  shell: openssl x509 -in {{ user_home }}/{{ certificate_path }}/node-2.pem -text -noout
+  shell: openssl x509 -in {{ user_home }}/{{ certificate_path }}/node-1.pem -text -noout
   register: cert_out
 
 - name: Print check for certificate
   debug:
     msg: "Certificates OK"
-  when: cert_out is defined and cert_out.stdout.find('CN=system:node:node-2')
+  when: cert_out is defined and cert_out.stdout.find('CN=system:node:node-1')
 
 - name: Check Controlelr manager certificate
   stat:

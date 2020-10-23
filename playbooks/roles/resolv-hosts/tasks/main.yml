@@ -16,7 +16,7 @@
   loop:
     "{{ merged_hosts }}"
   become: true
-  when: mao is defined
+  when: rewrite_hosts is defined
 
 - name: Vagrant ssh key
   shell: vagrant ssh-config loadbalancer | grep IdentityFile | awk '{print $2}'
@@ -35,4 +35,3 @@
     dest: "{{ inventory_dir }}/vagrant_hosts"
   loop:
     "{{ merged_hosts }}"
-  when: not vagrant_hosts.stat.exists

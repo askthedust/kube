@@ -6,3 +6,4 @@ venv*
 *.log
 .vagrant*
 vagrant_hosts
+playbooks/roles/test
