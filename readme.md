@@ -18,7 +18,9 @@ In the directory `vagrant` there is a file called `Vagrantfile` which is configu
 - 1 load balancer
 
 In the `Vagrantfile` there are also the information about IP addresses, memory an CPU for VMs. Changing IP addresses means 
-you have to change them also here: `playbooks/inventory/group_vars/all.yml`.
+you have to change them also here: `playbooks/inventory/group_vars/all.yml`. It is possible to change the number of workers nodes
+with the variable `number_node` and the number of controllers `number_master`. It is also possible to add new nodes, 
+in this case there is also the need to add them in the `workers_list` and provide the correct number in `number_node`. 
 
 ### Steps to rollout and provisioning
 1. Create and run the python venv: `virtualenv env && source env/bin/activate`
@@ -37,6 +39,5 @@ you have to change them also here: `playbooks/inventory/group_vars/all.yml`.
 2. Improve the abstraction, currently many things are hardcoded
 3. Add compatibility with newer version of ubuntu (or debian based)
 4. Make the network plugin configurable
-5. Make possible to bootstrap a smaller version of the cluster
 6. Add monitoring: prometheus and grafana
 7. Add logs: grafana/loki

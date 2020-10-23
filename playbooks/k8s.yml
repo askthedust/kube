@@ -40,7 +40,7 @@
   roles:
     - { role: api-loadbalancer, tags: ["api-loadbalancer"] }
 
-- hosts: workers
+- hosts: nodes
   gather_facts: true
   become: true
   become_method: sudo
