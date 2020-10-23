@@ -1,6 +1,6 @@
 # Readme
 This project is taking the original **Kelsey Hightower** [github](https://github.com/kelseyhightower/kubernetes-the-hard-way)
-which should be directed all the credits, with some small modification, to permit to run it in local with VirtualBox,
+to who should be directed all the credits. There are small differences, to permit to run it in local with VirtualBox,
 and reusable with Ansible. My setup is a Mac and this is a pretty common. 
 The goal is to have a working cluster locally, even with a balancer for the controllers, for testing purposes. 
 
