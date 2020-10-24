@@ -4,8 +4,6 @@
 
 require 'yaml'
 
-IMAGE_NAME = "ubuntu/xenial64"
-
 configs        = YAML.load_file('../inventory/group_vars/all.yml')
 vagrant_config = configs['configs']
 
@@ -13,20 +11,29 @@ Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
-        v.memory = 1024
+        v.memory = vagrant_config['controller_memory']
         v.cpus = 1
     end
 
     (1..vagrant_config['number_master']).each do |i|
         config.vm.define "master-#{i}", primary: true do |master|
-            master.vm.box = IMAGE_NAME
+            master.vm.box = vagrant_config['vbox_ubuntu_dist']
             master.vm.network "private_network", ip: "192.168.50.#{10+i}"
             master.vm.hostname = "master-#{i}"
         end
     end
+end
+
+Vagrant.configure("2") do |config|
+    config.ssh.insert_key = false
+
+    config.vm.provider "virtualbox" do |v|
+        v.memory = vagrant_config['loadbalancer_memory']
+        v.cpus = 1
+    end
 
     config.vm.define "loadbalancer", primary: true do |loadbalancer|
-        loadbalancer.vm.box = IMAGE_NAME
+        loadbalancer.vm.box = vagrant_config['vbox_ubuntu_dist']
         loadbalancer.vm.network "private_network", ip: "192.168.50.30"
         loadbalancer.vm.hostname = "loadbalancer"
     end
@@ -36,13 +43,13 @@ Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
-        v.memory = 2048
+        v.memory = vagrant_config['node_memory']
         v.cpus = 1
     end
 
     (1..vagrant_config['number_node']).each do |i|
         config.vm.define "node-#{i}" do |node|
-            node.vm.box = IMAGE_NAME
+            node.vm.box = vagrant_config['vbox_ubuntu_dist']
             node.vm.network "private_network", ip: "192.168.50.#{20+i}"
             node.vm.hostname = "node-#{i}"
         end

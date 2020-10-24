@@ -3,19 +3,19 @@
   block:
     - name: Generate kubelet kubeconfig
       shell: "kubectl config set-cluster kubernetes \
-        --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
+        --certificate-authority={{ certificate_path }}/ca.pem \
         --embed-certs=true \
         --server=https://{{ loadbalancer[0]['ip'] }}:6443 \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/{{ item.name }}.kubeconfig"
+        --kubeconfig={{ certificate_path }}/{{ item.name }}.kubeconfig"
       loop:
         "{{ workers }}"
 
     - name: Generate set-credentials
       shell: "kubectl config set-credentials system:node:{{ item.name }} \
-        --client-certificate={{ user_home }}/{{ certificate_path }}/{{ item.name }}.pem \
-        --client-key={{ user_home }}/{{ certificate_path }}/{{ item.name }}-key.pem \
+        --client-certificate={{ certificate_path }}/{{ item.name }}.pem \
+        --client-key={{ certificate_path }}/{{ item.name }}-key.pem \
         --embed-certs=true \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/{{ item.name }}.kubeconfig"
+        --kubeconfig={{ certificate_path }}/{{ item.name }}.kubeconfig"
       loop:
         "{{ workers }}"
 
@@ -23,13 +23,13 @@
       shell: "kubectl config set-context default \
         --cluster=kubernetes \
         --user=system:node:{{ item.name }} \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/{{ item.name }}.kubeconfig"
+        --kubeconfig={{ certificate_path }}/{{ item.name }}.kubeconfig"
       loop:
         "{{ workers }}"
 
     - name: Use context
       shell: "kubectl config use-context default \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/{{ item.name }}.kubeconfig"
+        --kubeconfig={{ certificate_path }}/{{ item.name }}.kubeconfig"
       loop:
         "{{ workers }}"
 
@@ -37,102 +37,102 @@
   block:
     - name: kube-proxy set cluster
       shell: "kubectl config set-cluster kubernetes \
-        --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
+        --certificate-authority={{ certificate_path }}/ca.pem \
         --embed-certs=true \
         --server=https://{{ loadbalancer[0]['ip'] }}:6443 \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-proxy.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-proxy.kubeconfig"
 
     - name: kube-proxy set credentials
       shell: "kubectl config set-credentials system:kube-proxy \
-        --client-certificate={{ user_home }}/{{ certificate_path }}/kube-proxy.pem \
-        --client-key={{ user_home }}/{{ certificate_path }}/kube-proxy-key.pem \
+        --client-certificate={{ certificate_path }}/kube-proxy.pem \
+        --client-key={{ certificate_path }}/kube-proxy-key.pem \
         --embed-certs=true \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-proxy.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-proxy.kubeconfig"
 
     - name: kube-proxy set context
       shell: "kubectl config set-context default \
         --cluster=kubernetes \
         --user=system:kube-proxy \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-proxy.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-proxy.kubeconfig"
 
     - name: kube-proxy use context
       shell: "kubectl config use-context default \
-      --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-proxy.kubeconfig"
+      --kubeconfig={{ certificate_path }}/kube-proxy.kubeconfig"
 
 - name: Kube-controller-manager config
   block:
     - name: controller-manager set cluster
       shell: "kubectl config set-cluster kubernetes \
-        --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
+        --certificate-authority={{ certificate_path }}/ca.pem \
         --embed-certs=true \
         --server=https://127.0.0.1:6443 \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-controller-manager.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-controller-manager.kubeconfig"
 
     - name: kube-controller-manager set credentials
       shell: "kubectl config set-credentials system:kube-controller-manager \
-        --client-certificate={{ user_home }}/{{ certificate_path }}/kube-controller-manager.pem \
-        --client-key={{ user_home }}/{{ certificate_path }}/kube-controller-manager-key.pem \
+        --client-certificate={{ certificate_path }}/kube-controller-manager.pem \
+        --client-key={{ certificate_path }}/kube-controller-manager-key.pem \
         --embed-certs=true \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-controller-manager.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-controller-manager.kubeconfig"
 
     - name: kube-controller-manager set context
       shell: "kubectl config set-context default \
         --cluster=kubernetes \
         --user=system:kube-controller-manager \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-controller-manager.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-controller-manager.kubeconfig"
 
     - name: kube-controller-manager use context
       shell: "kubectl config use-context default \
-      --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-controller-manager.kubeconfig"
+      --kubeconfig={{ certificate_path }}/kube-controller-manager.kubeconfig"
 
 - name: kube-scheduler config
   block:
     - name: kube-scheduler set cluster
       shell: "kubectl config set-cluster kubernetes \
-        --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
+        --certificate-authority={{ certificate_path }}/ca.pem \
         --embed-certs=true \
         --server=https://127.0.0.1:6443 \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-scheduler.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-scheduler.kubeconfig"
 
     - name: kube-scheduler set credentials
       shell: "kubectl config set-credentials system:kube-scheduler \
-        --client-certificate={{ user_home }}/{{ certificate_path }}/kube-scheduler.pem \
-        --client-key={{ user_home }}/{{ certificate_path }}/kube-scheduler-key.pem \
+        --client-certificate={{ certificate_path }}/kube-scheduler.pem \
+        --client-key={{ certificate_path }}/kube-scheduler-key.pem \
         --embed-certs=true \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-scheduler.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-scheduler.kubeconfig"
 
     - name: kube-scheduler set context
       shell: "kubectl config set-context default \
         --cluster=kubernetes \
         --user=system:kube-scheduler \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-scheduler.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-scheduler.kubeconfig"
 
     - name: kube-scheduler use context
       shell: "kubectl config use-context default \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/kube-scheduler.kubeconfig"
+        --kubeconfig={{ certificate_path }}/kube-scheduler.kubeconfig"
 
 - name: admin config
   block:
     - name: admin set cluster
       shell: "kubectl config set-cluster kubernetes \
-        --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
+        --certificate-authority={{ certificate_path }}/ca.pem \
         --embed-certs=true \
         --server=https://127.0.0.1:6443 \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/admin.kubeconfig"
+        --kubeconfig={{ certificate_path }}/admin.kubeconfig"
 
     - name: admin set credentials
       shell: "kubectl config set-credentials admin \
-        --client-certificate={{ user_home }}/{{ certificate_path }}/admin.pem \
-        --client-key={{ user_home }}/{{ certificate_path }}/admin-key.pem \
+        --client-certificate={{ certificate_path }}/admin.pem \
+        --client-key={{ certificate_path }}/admin-key.pem \
         --embed-certs=true \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/admin.kubeconfig"
+        --kubeconfig={{ certificate_path }}/admin.kubeconfig"
 
     - name: admin set context
       shell: "kubectl config set-context default \
         --cluster=kubernetes \
         --user=admin \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/admin.kubeconfig"
+        --kubeconfig={{ certificate_path }}/admin.kubeconfig"
 
     - name: admin use context
       shell: "kubectl config use-context default \
-        --kubeconfig={{ user_home }}/{{ certificate_path }}/admin.kubeconfig"
+        --kubeconfig={{ certificate_path }}/admin.kubeconfig"

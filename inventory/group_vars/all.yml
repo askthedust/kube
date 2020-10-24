@@ -1,5 +1,5 @@
 ---
-certificate_path: "k8s-certs"
+certificate_path: "../k8s-certs"
 user_home: "{{ ansible_facts['user_dir'] }}"
 local_executable_path: "/usr/local/bin"
 etcd_version: "v3.3.5"
@@ -21,8 +21,12 @@ vagrant_dir:
 merged_hosts: []
 
 configs:
+    vbox_ubuntu_dist: "ubuntu/xenial64" # Currently this cannot be change
     number_node: 2
     number_master: 2
+    node_memory: 1024
+    controller_memory: 1024
+    loadbalancer_memory: 512
 
 workers_list:
   - name: node-1

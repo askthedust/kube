@@ -1,12 +1,7 @@
 ---
-- name: local user
-  shell: "echo $HOME"
-  register: local_user_home
-  delegate_to: 127.0.0.1
-
 - name: copy certificates and configuration in common between nodes
   copy:
-    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    src: "{{ certificate_path }}/{{ item }}"
     dest: "/home/{{ remote_user }}/"
     force: no
     mode: '0644'
@@ -17,7 +12,7 @@
 
 - name: copy certificates and configuration into node
   copy:
-    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    src: "{{ certificate_path }}/{{ item }}"
     dest: "/home/{{ remote_user }}/"
     force: no
     mode: '0644'
@@ -29,7 +24,7 @@
 
 - name: copy certificates and configuration into master nodes
   copy:
-    src: "{{ local_user_home.stdout }}/{{ certificate_path }}/{{ item }}"
+    src: "{{ certificate_path }}/{{ item }}"
     dest: "/home/{{ remote_user }}/"
     force: no
     mode: '0644'
