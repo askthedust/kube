@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
+        v.check_guest_additions = false
         v.memory = vagrant_config['controller_memory']
         v.cpus = 1
     end
@@ -28,6 +29,7 @@ Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
+        v.check_guest_additions = false
         v.memory = vagrant_config['loadbalancer_memory']
         v.cpus = 1
     end
@@ -43,6 +45,7 @@ Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
+        v.check_guest_additions = false
         v.memory = vagrant_config['node_memory']
         v.cpus = 1
     end

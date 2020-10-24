@@ -13,11 +13,6 @@
 
 - name: testing
   block:
-    - name: wait networking is consistent
-      pause:
-        seconds: 10
-      when: not k8s_test
-
     - name: create two nginx replica deployment
       shell: "kubectl apply -f {{ role_path }}/files/nginx_replicas.yml"
 
