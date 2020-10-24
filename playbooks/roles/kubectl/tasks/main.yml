@@ -2,14 +2,14 @@
   block:
     - name: kubectl set cluster
       shell: "kubectl config set-cluster kubernetes \
-        --certificate-authority={{ user_home }}/{{ certificate_path }}/ca.pem \
+        --certificate-authority={{ certificate_path }}/ca.pem \
         --embed-certs=true \
         --server=https://{{ loadbalancer[0]['ip'] }}:6443"
 
     - name: kubectl set credentials
       shell: "kubectl config set-credentials admin \
-        --client-certificate={{ user_home }}/{{ certificate_path }}/admin.pem \
-        --client-key={{ user_home }}/{{ certificate_path }}/admin-key.pem"
+        --client-certificate={{ certificate_path }}/admin.pem \
+        --client-key={{ certificate_path }}/admin-key.pem"
 
     - name: kubectl set context
       shell: "kubectl config set-context kubernetes \
