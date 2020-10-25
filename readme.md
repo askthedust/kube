@@ -1,6 +1,6 @@
 # Readme
 This project is taking the original **Kelsey Hightower** [github](https://github.com/kelseyhightower/kubernetes-the-hard-way)
-to who should be directed all the credits. There are small differences, to permit to run it in local with VirtualBox,
+to who should be directed all the credits. There are small differences, to permit to run it in locally with VirtualBox,
 and reusable with Ansible. My setup is a Mac and this is a pretty common. 
 The goal is to have a working cluster locally, even with a balancer for the controllers, for testing purposes. 
 
@@ -32,7 +32,7 @@ configs:
 ```
 
 ### Steps to rollout and provisioning
-1. Create and run the python venv: `virtualenv env && source env/bin/activate`
+1. Create and run the python venv: `virtualenv -p python3 env && source env/bin/activate`
 2. Install pip requirements: `pip install -r requirements.txt`
 3. `cd vagrant` and run `vagrant up`, wait for the VMs are up and running
 4. Back to the root of the project and run ansible to generate hostfile: `ansible-playbook playbooks/k8s.yml --diff -t hosts`
@@ -44,9 +44,8 @@ configs:
     - remove all the files in `k8s-certs`
 
 ### TODO
-1. Make it compatible for linux, currently all the binaries are hardcoded for mac
-2. Improve the abstraction, currently many things are hardcoded
-3. Add compatibility with newer version of ubuntu (or debian based)
-4. Make the network plugin configurable
-6. Add monitoring: prometheus and grafana
-7. Add logs: grafana/loki
+1. Improve the abstraction, currently many things are hardcoded
+2. Add compatibility with newer version of ubuntu (or debian based)
+3. Make the network plugin configurable
+4. Add monitoring: prometheus and grafana
+5. Add logs: grafana/loki

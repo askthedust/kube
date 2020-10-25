@@ -1,7 +1,11 @@
 ---
+- name: Set os
+  set_fact:
+    os_type: "{% if ansible_facts['os_family']|lower == 'darwin' %}darwin{% else %}linux{% endif %}"
+
 - name: Dowload cfssl cfssljson
   get_url:
-    url: "{{ cfssl_url }}{{ item }}"
+    url: "{{ cfssl_url }}{{ os_type }}/{{ item }}"
     dest: "{{ local_executable_path }}/{{ item }}"
     mode: '0755'
   become: true
@@ -11,7 +15,7 @@
 
 - name: Dowload kubectl
   get_url:
-    url: "{{ k8s_url }}{{ item }}"
+    url: "{{ k8s_url }}{{ os_type }}/amd64/{{ item }}"
     dest: "{{ local_executable_path }}/{{ item }}"
     mode: '0755'
   become: true
